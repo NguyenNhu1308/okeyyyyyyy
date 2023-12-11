@@ -1,0 +1,32 @@
+package com.example.demo;
+
+import com.example.demo.api.commands.*;
+import com.example.demo.infrastructure.CommandDispatcher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import javax.annotation.PostConstruct;
+
+@SpringBootApplication
+public class CommandApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(CommandApplication.class, args);
+	}
+
+	@Autowired
+	private CommandDispatcher commandDispatcher;
+
+	@Autowired
+	private CommandHandler commandHandler;
+
+	@PostConstruct
+	public void registerHandlers() {
+		commandDispatcher.registerHandler(OpenAccountCommand.class, commandHandler::handle);
+		commandDispatcher.registerHandler(DepositFundsCommand.class, commandHandler::handle);
+		commandDispatcher.registerHandler(WithdrawFundsCommand.class, commandHandler::handle);
+		commandDispatcher.registerHandler(CloseAccountCommand.class, commandHandler::handle);
+		commandDispatcher.registerHandler(RestoreReadDbCommand.class, commandHandler::handle);
+	}
+}
